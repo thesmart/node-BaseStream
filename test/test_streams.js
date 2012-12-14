@@ -18,7 +18,7 @@ describe('Produce and Consumer', function() {
 			done();
 		});
 
-		p._onData('hello world');
+		p._produceData('hello world');
 		p.destroy();
 	});
 
