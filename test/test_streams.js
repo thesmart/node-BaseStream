@@ -27,7 +27,7 @@ describe('Produce and Consumer', function() {
 
 		var p = new streams.ProducerStream();
 		var c = new streams.ConsumerStream(1);
-		c.setDataHandler(function(data, cb) {
+		c.setMiddleware(function(data, cb) {
 			global.setTimeout(cb.bind(this, null, data), 1000);
 		});
 		p.pipe(c);

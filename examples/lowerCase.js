@@ -7,7 +7,7 @@ var writeStream = fs.createWriteStream(__dirname + '/output.txt');
 
 // create your own stream middle-ware
 var lowerCaseStream = new bs.BiStream();
-lowerCaseStream.setDataHandler(function(data, cb) {
+lowerCaseStream.setMiddleware(function(data, cb) {
 	var result = data.toLowerCase();
 	cb(null, result);
 });

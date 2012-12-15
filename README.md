@@ -1,7 +1,7 @@
 node-BaseStream
 ===================
 
-Middleware for Node.js Streams.  Creating your own is easy:
+Middleware for Node.js Streams.  Creating your own Stream is easy!
 
 ```javascript
 var fs = require('fs');
@@ -11,9 +11,9 @@ var bs = require('base-stream');
 var readStream = fs.createReadStream('./input.txt', { encoding: 'utf8' });
 var writeStream = fs.createWriteStream('./output.txt');
 
-// create your own stream middle-ware
+// create your own stream middleware
 var lowerCaseStream = new bs.BiStream(); // bi-directional stream
-lowerCaseStream.setDataHandler(function(data, cb) {
+lowerCaseStream.setMiddleware(function(data, cb) {
 	var result = data.toLowerCase();
 	cb(null, result);
 });

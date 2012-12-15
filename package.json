@@ -1,7 +1,7 @@
 {
   "name": "base-stream",
   "version": "0.0.5",
-  "description": "Middleware for Node.js Streams.  Creating your own is easy:",
+  "description": "Middleware for Node.js Streams.  Creating your own Stream is easy!",
   "main": "index.js",
   "repository": {
     "type": "git",
