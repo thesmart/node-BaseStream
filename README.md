@@ -26,6 +26,7 @@ var lowerCaseStream = new bs.BiStream(); // bi-directional stream
 lowerCaseStream.setMiddleware(function(data, cb) {
 	var result = data.toLowerCase();
 	cb(null, result);
+	// NOTE: set result to undefined to prevent it from moving downstream
 });
 
 // lay some pipe, Tex!

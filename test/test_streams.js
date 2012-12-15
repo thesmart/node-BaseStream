@@ -116,4 +116,21 @@ describe('Produce and Consumer', function() {
 		p._produceData('hello world');
 		p.destroy();
 	});
+
+	it('filter', function() {
+		var p = new streams.ProducerStream();
+		var b = new streams.BiStream();
+		b.setMiddleware(function(data, cb) {
+			cb(null, data % 2 !== 0 ? undefined : data);
+		});
+		p.pipe(b);
+
+		b.on('data', function(data) {
+			assert.ok(data % 2 === 0);
+		});
+
+		for (var i = 0; i < 10; ++i) {
+			p._produceData(i);
+		}
+	});
 });
