@@ -3,6 +3,16 @@ node-BaseStream
 
 Middleware for Node.js Streams.  Creating your own Stream is easy!
 
+## Install
+
+```
+npm install base-stream
+```
+
+## Middleware
+
+Writing new a Stream is easy:
+
 ```javascript
 var fs = require('fs');
 var bs = require('base-stream');
@@ -22,6 +32,24 @@ lowerCaseStream.setMiddleware(function(data, cb) {
 readStream.pipe(lowerCaseStream);
 lowerCaseStream.pipe(writeStream);
 ```
+
+input.txt
+
+```
+WHY R U ALL
+SO OFFENDED
+BY ALL CAPS???
+```
+
+output.txt
+
+```
+why r u all
+so offended
+by all caps???
+```
+
+## Throttling
 
 Ever have a producer (e.g. database) that is too fast for the consumer (e.g. http api)?  Streams solve this problem!
 
