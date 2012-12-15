@@ -1,5 +1,5 @@
 module.exports = {
-	ConsumerStream: require('./lib/consumer_stream'),
-	ProducerStream: require('./lib/producer_stream'),
-	BiStream: require('./lib/bi_stream')
+	ConsumerStream: require('./lib/consumer_stream.js'),
+	ProducerStream: require('./lib/producer_stream.js'),
+	BiStream: require('./lib/bi_stream.js')
 };

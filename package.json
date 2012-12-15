@@ -1,20 +1,18 @@
 {
-  "name": "abstract-stream",
+  "name": "base-stream",
   "version": "0.0.0",
-  "description": "Some abstract base classes for Node.js Stream implementation",
+  "description": "Some base classes for Node.js Stream implementation",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
-    "url": "git://github.com/thesmart/node-AbstractStream.git"
+    "url": "git://github.com/thesmart/node-BaseStream.git"
   },
   "keywords": [
     "Stream",
     "stream.Stream",
     "streams",
-    "node streams"
+    "node streams",
+    "base stream"
   ],
   "author": "John Smart <smart@telly.com> (https://github.com/thesmart)",
   "license": "BSD"
