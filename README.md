@@ -1,19 +1,13 @@
 node-BaseStream
 ===================
 
-Middleware for Node.js Streams.
-
-Conceptual example of a stream pipeline:
-
-	ProducerStream -> BiStream -> BiStream -> BiStream -> ConsumerStream
-
-## Install
+Middleware for Node.js Streams.  Creating your own Stream is easy!
 
 ```
 npm install base-stream
 ```
 
-Creating your own asynchronous pipeline is easy!
+Example of an asynchronous pipeline:
 
 ```javascript
 var fs = require('fs');
