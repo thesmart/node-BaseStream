@@ -1,7 +1,11 @@
 node-BaseStream
 ===================
 
-Middleware for Node.js Streams.  Creating your own Stream is easy!
+Middleware for Node.js Streams.
+
+Conceptual example of a stream pipeline:
+
+	ProducerStream -> BiStream -> BiStream -> BiStream -> ConsumerStream
 
 ## Install
 
@@ -9,9 +13,7 @@ Middleware for Node.js Streams.  Creating your own Stream is easy!
 npm install base-stream
 ```
 
-## Middleware
-
-Writing new a Stream is easy:
+Creating your own asynchronous pipeline is easy!
 
 ```javascript
 var fs = require('fs');
@@ -50,7 +52,7 @@ so offended
 by all caps???
 ```
 
-## Throttling
+## Throttling feature
 
 Ever have a producer (e.g. database) that is too fast for the consumer (e.g. http api)?  Streams solve this problem!
 
