@@ -5,12 +5,12 @@ var bs = require('../index.js');
 var readStream = fs.createReadStream(__dirname + '/input.txt', { encoding: 'utf8' });
 var writeStream = fs.createWriteStream(__dirname + '/output.txt');
 
-// create your own streams
-var lowerCaseStream = new bs.BiStream(); // bi-directional stream
-lowerCaseStream._consumeData = function(data, cb) {
+// create your own stream middle-ware
+var lowerCaseStream = new bs.BiStream();
+lowerCaseStream.setDataHandler(function(data, cb) {
 	var result = data.toLowerCase();
 	cb(null, result);
-};
+});
 
 // lay some pipe, Tex!
 readStream.pipe(lowerCaseStream);

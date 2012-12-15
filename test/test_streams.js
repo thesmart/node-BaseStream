@@ -4,15 +4,6 @@ var streams = require('../index.js');
 var assert = require('assert');
 var util = require('util');
 
-var SlowStream = function() {
-	streams.ConsumerStream.apply(this, arguments);
-};
-util.inherits(SlowStream, streams.ConsumerStream);
-
-SlowStream.prototype._consumeData = function(data, cb) {
-	global.setTimeout(cb, 1000);
-};
-
 describe('Produce and Consumer', function() {
 	it('write through', function(done) {
 		var p = new streams.ProducerStream();
@@ -35,7 +26,10 @@ describe('Produce and Consumer', function() {
 	it('limits', function(done) {
 
 		var p = new streams.ProducerStream();
-		var c = new SlowStream(1);
+		var c = new streams.ConsumerStream(1);
+		c.setDataHandler(function(data, cb) {
+			global.setTimeout(cb.bind(this, null, data), 1000);
+		});
 		p.pipe(c);
 
 		var wasPaused = false;
