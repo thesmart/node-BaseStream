@@ -26,8 +26,9 @@ lowerCaseStream.setMiddleware(function(data, cb) {
 });
 
 // lay some pipe, Tex!
-readStream.pipe(lowerCaseStream);
-lowerCaseStream.pipe(writeStream);
+readStream
+	.pipe(lowerCaseStream)
+	.pipe(writeStream);
 ```
 
 input.txt

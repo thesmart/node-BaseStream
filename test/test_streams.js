@@ -5,6 +5,21 @@ var assert = require('assert');
 var util = require('util');
 
 describe('Produce and Consumer', function() {
+	it('forEach', function() {
+		var p = new streams.ProducerStream();
+		var b = new streams.BiStream();
+		var c = new streams.ConsumerStream();
+
+		p.pipe(b).pipe(c);
+
+		var order = [];
+		p.forEach(function(stream, name) {
+			order.push(name);
+		});
+
+		assert.deepEqual(["ProducerStream","BiStream","ConsumerStream"], order);
+	});
+
 	it('write through', function(done) {
 		var p = new streams.ProducerStream();
 		var c = new streams.ConsumerStream();
