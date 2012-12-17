@@ -6,7 +6,7 @@ var util = require('util');
 
 describe('Produce and Consumer', function() {
 	it('write through', function(done) {
-		var p = new streams.ProducerStream();
+		var p = new streams.BiStream();
 		var c = new streams.ConsumerStream();
 		p.pipe(c);
 
@@ -19,13 +19,13 @@ describe('Produce and Consumer', function() {
 			done();
 		});
 
-		p.produce('hello world');
+		p.write('hello world');
 		p.destroy();
 	});
 
 	it('limits', function(done) {
 
-		var p = new streams.ProducerStream('Stream-P');
+		var p = new streams.BiStream('Stream-P');
 		var c = new streams.ConsumerStream('Stream-C', 1);
 		c.setMiddleware(function(data, cb) {
 			global.setTimeout(cb.bind(this, null, data), 1000);
@@ -48,18 +48,18 @@ describe('Produce and Consumer', function() {
 			done();
 		});
 
-		p.produce('hello world');
+		p.write('hello world');
 		c.destroySoon();
 	});
 
 	it('destroySoon', function(done) {
-		var p = new streams.ProducerStream();
+		var p = new streams.BiStream();
 		var c = new streams.ConsumerStream();
 		p.pipe(c);
 
-		var isClosed = false;
-		p.on('close', function() {
-			isClosed = true;
+		var pEnd = false;
+		p.on('end', function() {
+			pEnd = true;
 		});
 
 		c.on('drain', function() {
@@ -69,7 +69,7 @@ describe('Produce and Consumer', function() {
 
 		c.on('close', function() {
 			process.nextTick(function() {
-				assert.ok(isClosed);
+				assert.ok(pEnd);
 				done();
 			});
 		});
@@ -78,7 +78,7 @@ describe('Produce and Consumer', function() {
 	});
 
 	it('three stages', function(done) {
-		var p = new streams.ProducerStream();
+		var p = new streams.BiStream();
 		var b = new streams.BiStream();
 		var c = new streams.ConsumerStream();
 
@@ -109,16 +109,16 @@ describe('Produce and Consumer', function() {
 			assert.ok(cDrain, 'consumer never drained before closing');
 			assert.ok(pData, 'producer did not produce data');
 			assert.ok(bData, 'bi-directional did not produce data');
-			assert.equal(1, b.countProcessed);
+			assert.equal(1, c.countUpstream);
 			done();
 		});
 
-		p.produce('hello world');
+		p.write('hello world');
 		p.destroy();
 	});
 
 	it('filter', function() {
-		var p = new streams.ProducerStream();
+		var p = new streams.BiStream();
 		var b = new streams.BiStream();
 		b.setMiddleware(function(data, cb) {
 			cb(null, data % 2 !== 0 ? undefined : data);
@@ -130,12 +130,12 @@ describe('Produce and Consumer', function() {
 		});
 
 		for (var i = 0; i < 10; ++i) {
-			p.produce(i);
+			p.write(i);
 		}
 	});
 
 	it('chain end then close', function(done) {
-		var a = new streams.ProducerStream('a');
+		var a = new streams.BiStream('a');
 		var b = new streams.BiStream('b');
 		var c = new streams.BiStream('c');
 		var d = new streams.ConsumerStream('d');
@@ -167,25 +167,21 @@ describe('Produce and Consumer', function() {
 		a.on('close', function() {
 //			console.log(this.name, 'close');
 			closed[this.name] = true;
-			assert.ok(ended['a']);
 		});
 		b.on('close', function() {
 //			console.log(this.name, 'close');
 			closed[this.name] = true;
-			assert.ok(ended['b']);
-			assert.ok(closed['a']);
 		});
 		c.on('close', function() {
 //			console.log(this.name, 'close');
 			closed[this.name] = true;
-			assert.ok(ended['c']);
-			assert.ok(closed['b']);
 		});
 		d.on('close', function() {
 //			console.log(this.name, 'close');
 			closed[this.name] = true;
-			assert.ok(ended['d']);
-			assert.ok(closed['c']);
+			assert.ok(ended['a']);
+			assert.ok(ended['b']);
+			assert.ok(ended['c']);
 			done();
 		});
 
