@@ -40,8 +40,8 @@ describe('Produce and Consumer', function() {
 
 	it('limits', function(done) {
 
-		var p = new streams.ProducerStream();
-		var c = new streams.ConsumerStream(1);
+		var p = new streams.ProducerStream('Stream-P');
+		var c = new streams.ConsumerStream('Stream-C', 1);
 		c.setMiddleware(function(data, cb) {
 			global.setTimeout(cb.bind(this, null, data), 1000);
 		});
