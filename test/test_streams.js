@@ -5,21 +5,6 @@ var assert = require('assert');
 var util = require('util');
 
 describe('Produce and Consumer', function() {
-	it('forEach', function() {
-		var p = new streams.ProducerStream();
-		var b = new streams.BiStream();
-		var c = new streams.ConsumerStream();
-
-		p.pipe(b).pipe(c);
-
-		var order = [];
-		p.forEach(function(stream, name) {
-			order.push(name);
-		});
-
-		assert.deepEqual(["ProducerStream","BiStream","ConsumerStream"], order);
-	});
-
 	it('write through', function(done) {
 		var p = new streams.ProducerStream();
 		var c = new streams.ConsumerStream();
@@ -34,7 +19,7 @@ describe('Produce and Consumer', function() {
 			done();
 		});
 
-		p._produceData('hello world');
+		p.produce('hello world');
 		p.destroy();
 	});
 
@@ -63,7 +48,7 @@ describe('Produce and Consumer', function() {
 			done();
 		});
 
-		p._produceData('hello world');
+		p.produce('hello world');
 		c.destroySoon();
 	});
 
@@ -128,7 +113,7 @@ describe('Produce and Consumer', function() {
 			done();
 		});
 
-		p._produceData('hello world');
+		p.produce('hello world');
 		p.destroy();
 	});
 
@@ -145,7 +130,65 @@ describe('Produce and Consumer', function() {
 		});
 
 		for (var i = 0; i < 10; ++i) {
-			p._produceData(i);
+			p.produce(i);
 		}
+	});
+
+	it('chain end then close', function(done) {
+		var a = new streams.ProducerStream('a');
+		var b = new streams.BiStream('b');
+		var c = new streams.BiStream('c');
+		var d = new streams.ConsumerStream('d');
+		var ended = {};
+		var closed = {};
+
+		a.pipe(b).pipe(c).pipe(d);
+
+		a.on('end', function() {
+//			console.log(this.name, 'end');
+			ended[this.name] = true;
+		});
+		b.on('end', function() {
+//			console.log(this.name, 'end');
+			ended[this.name] = true;
+			assert.ok(ended['a']);
+		});
+		c.on('end', function() {
+//			console.log(this.name, 'end');
+			ended[this.name] = true;
+			assert.ok(ended['b']);
+		});
+		d.on('end', function() {
+//			console.log(this.name, 'end');
+			ended[this.name] = true;
+			assert.ok(ended['c']);
+		});
+
+		a.on('close', function() {
+//			console.log(this.name, 'close');
+			closed[this.name] = true;
+			assert.ok(ended['a']);
+		});
+		b.on('close', function() {
+//			console.log(this.name, 'close');
+			closed[this.name] = true;
+			assert.ok(ended['b']);
+			assert.ok(closed['a']);
+		});
+		c.on('close', function() {
+//			console.log(this.name, 'close');
+			closed[this.name] = true;
+			assert.ok(ended['c']);
+			assert.ok(closed['b']);
+		});
+		d.on('close', function() {
+//			console.log(this.name, 'close');
+			closed[this.name] = true;
+			assert.ok(ended['d']);
+			assert.ok(closed['c']);
+			done();
+		});
+
+		a.destroy();
 	});
 });
